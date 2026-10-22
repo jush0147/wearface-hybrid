@@ -2,6 +2,10 @@ name: Wear OS emulator smoke test
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/emulator.yml'
+      - 'scripts/wear-emulator-smoke.sh'
 
 permissions:
   contents: read
