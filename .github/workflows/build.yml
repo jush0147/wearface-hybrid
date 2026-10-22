@@ -1,0 +1,74 @@
+name: Validate and build generic WFF APK
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out hybrid watch face source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install XML and image tooling
+        run: python -m pip install --disable-pip-version-check 'lxml>=5,<7' 'Pillow>=10,<13'
+
+      - name: Generate ORIGINAL generic placeholder sprites (never Samsung artwork)
+        run: python scripts/prepare_assets.py
+
+      - name: Local project structure checks
+        run: python scripts/verify_project.py
+
+      - name: Check out official Google WFF validator source
+        uses: actions/checkout@v4
+        with:
+          repository: google/watchface
+          path: .ci/wff-tools
+          persist-credentials: false
+
+      - name: Build official WFF validator
+        working-directory: .ci/wff-tools/third_party/wff
+        run: ./gradlew :specification:validator:executable-jar --no-daemon
+
+      - name: Validate WFF version 2 XML
+        run: java -jar .ci/wff-tools/third_party/wff/specification/validator/build/libs/wff-validator.jar 2 watchface/src/main/res/raw/watchface.xml
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android 35 platform and build tools
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+
+      - name: Set up Gradle 8.10.2
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Compile debug APK (contains ONLY original generic placeholders)
+        run: gradle :watchface:assembleDebug --no-daemon --stacktrace
+
+      - name: Upload placeholder-only debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: generic-hybrid-watchface-debug
+          path: watchface/build/outputs/apk/debug/watchface-debug.apk
+          if-no-files-found: error
+          retention-days: 7

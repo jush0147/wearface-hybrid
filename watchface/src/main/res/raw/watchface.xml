@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="450" height="450">
+  <!-- Samsung's source numerals are treated as two separate bitmap-font families.
+       The images are extracted locally from original APKs via prepare_assets.py. -->
+  <BitmapFonts>
+    <BitmapFont name="samsung_hour">
+      <Character name="0" resource="hour_0" width="115" height="147" />
+      <Character name="1" resource="hour_1" width="115" height="147" />
+      <Character name="2" resource="hour_2" width="115" height="147" />
+      <Character name="3" resource="hour_3" width="115" height="147" />
+      <Character name="4" resource="hour_4" width="115" height="147" />
+      <Character name="5" resource="hour_5" width="115" height="147" />
+      <Character name="6" resource="hour_6" width="115" height="147" />
+      <Character name="7" resource="hour_7" width="115" height="147" />
+      <Character name="8" resource="hour_8" width="115" height="147" />
+      <Character name="9" resource="hour_9" width="115" height="147" />
+    </BitmapFont>
+    <BitmapFont name="samsung_minute">
+      <Character name="0" resource="minute_0" width="115" height="147" />
+      <Character name="1" resource="minute_1" width="115" height="147" />
+      <Character name="2" resource="minute_2" width="115" height="147" />
+      <Character name="3" resource="minute_3" width="115" height="147" />
+      <Character name="4" resource="minute_4" width="115" height="147" />
+      <Character name="5" resource="minute_5" width="115" height="147" />
+      <Character name="6" resource="minute_6" width="115" height="147" />
+      <Character name="7" resource="minute_7" width="115" height="147" />
+      <Character name="8" resource="minute_8" width="115" height="147" />
+      <Character name="9" resource="minute_9" width="115" height="147" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#ff000000">
+
+    <!-- Wake state: Minimal Digital; disappears completely in AOD. -->
+    <Group x="0" y="0" width="450" height="450" name="wake_digital" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <DigitalClock x="0" y="0" width="450" height="450">
+        <TimeText x="111" y="65" width="115" height="147" format="hh_10" hourFormat="24" align="CENTER">
+          <BitmapFont family="samsung_hour" size="147" />
+        </TimeText>
+        <TimeText x="226" y="65" width="115" height="147" format="hh_1" hourFormat="24" align="CENTER">
+          <BitmapFont family="samsung_hour" size="147" />
+        </TimeText>
+        <TimeText x="111" y="238" width="115" height="147" format="mm_10" align="CENTER">
+          <BitmapFont family="samsung_minute" size="147" />
+        </TimeText>
+        <TimeText x="226" y="238" width="115" height="147" format="mm_1" align="CENTER">
+          <BitmapFont family="samsung_minute" size="147" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+
+    <!-- Ambient state: Heritage Classic Roman dial and dynamically rotating hands. -->
+    <Group x="0" y="0" width="450" height="450" name="ambient_analog" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <PartImage x="0" y="0" width="450" height="450">
+        <Image resource="heritage_dial" />
+      </PartImage>
+      <AnalogClock x="0" y="0" width="450" height="450">
+        <!-- Original 56x480 Samsung hand textures: pivot is at center y=240. -->
+        <HourHand resource="hand_hour" x="199" y="0" width="52" height="450" pivotX="0.5" pivotY="0.5" />
+        <MinuteHand resource="hand_minute" x="199" y="0" width="52" height="450" pivotX="0.5" pivotY="0.5" />
+      </AnalogClock>
+      <PartImage x="211" y="211" width="28" height="28">
+        <Image resource="hand_cap" />
+      </PartImage>
+    </Group>
+  </Scene>
+</WatchFace>

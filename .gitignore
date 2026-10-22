@@ -1,0 +1,25 @@
+# CI generates placeholders at build-time. Never track Samsung sprites or derived previews.
+/watchface/src/main/res/drawable/*.png
+/preview_*.png
+/preview_*.jpg
+
+# Proprietary input packages / binary artifacts
+*.apk
+*.apks
+*.aab
+*.dex
+*.odex
+*.vdex
+*.zip
+*.jks
+*.keystore
+
+# Android/Gradle/Python
+.gradle/
+**/build/
+local.properties
+.idea/
+*.iml
+__pycache__/
+*.pyc
+.DS_Store
