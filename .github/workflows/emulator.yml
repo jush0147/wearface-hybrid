@@ -55,6 +55,7 @@ jobs:
         with:
           api-level: 34
           target: android-wear
+          profile: wearos_small_round
           arch: x86_64
           cores: 2
           ram-size: 2048M
